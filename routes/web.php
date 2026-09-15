@@ -7,6 +7,10 @@ use App\Http\Controllers\AuthController;
     Route::get('/register',[AuthController::class,'loadRegister']);
     Route::post('/studentregister',[AuthController::class,'studentRegister'])->name('studentregister');
 
-    Route::get('')
+    Route::get('/login',function(){
+        return redirect('/');
+    });
     Route::get('/',[AuthController::class,'loadLogin']);
-    Route::post('/studentlogin',[AuthController::class,'userLogin'])->name('userLogin');
+    Route::post('/login',[AuthController::class,'userLogin'])->name('userLogin');
+
+    Route::get('/logout',[AuthController::class,'userLogout']);
