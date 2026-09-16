@@ -35,6 +35,38 @@ class AuthController extends Controller
      public function loadLogin(){
         return view('login');
      }
-    
+
+     public function userLogin(Request $request){
+        $request->validate([
+            'email'=>'string|required|email',
+            'password'=>'string|required'
+        ]);
+
+        $usercrediential = $request->only('email','password');
+        if(Auth::attempt($usercrediential)){
+             if(Auth::user()->is_admin == 1){
+                 return redirect()->route('admin.dashboard');
+             }else{
+                 return redirect()->route('student.dashboard');
+             }
+        }else{
+            return back()->with('error','Invalid Email or Password');
+        }
+     }
+     
+     public function userDashboard(){
+        return view('student.dashboard');
+     }
+
+        public function adminDashboard(){
+        return view('admin.dashboard');
+     }
+
+     public function logout(Request $request){
+        Session::flush();
+        Auth::logout();
+        return redirect('/');
+
+     }
 
 }
