@@ -11,12 +11,24 @@ use App\Http\Controllers\AuthController;
     Route::get('/login',function(){
         return redirect('/');
     });
-    Route::get('/',[AuthController::class,'loadLogin']);
+    Route::get('/',[AuthController::class,'loadLogin'])->name('login');
     Route::post('/login',[AuthController::class,'userLogin'])->name('userLogin');
 
-    Route::get('/logout',[AuthController::class,'logout']);
 
-    Route::get('/admin/dashboard',[AuthController::class,'adminDashboard'])->name('admin.dashboard');
-    Route::get('/student/dashboard',[AuthController::class,'userDashboard'])->name('student.dashboard');
+    Route::middleware('auth')->group(function(){
+        Route::get('/logout',[AuthController::class,'logout']);
+     
+     Route::middleware('admin')->prefix('admin')->name('admin.')->group(function(){
+      Route::get('/dashboard',[AuthController::class,'adminDashboard'])->name('dashboard');
+    });
+
+    Route::middleware('student')->prefix('student')->name('student.')->group(function(){
+     Route::get('/dashboard',[AuthController::class,'userDashboard'])->name('dashboard');
+    });
+
+    });
+    
+   
+   
 
     
