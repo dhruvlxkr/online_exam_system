@@ -17,6 +17,8 @@ use App\Http\Controllers\AuthController;
     Route::get('/forgot-password',[AuthController::class,'forgotPassword'])->name('forgot-password');
     Route::post('/forgot-password',[AuthController::class,'resetPassword'])->name('reset-password');
 
+    Route::get('/reset-password',[AuthController::class,'loadresetpasword'])->name('loadresetpassword');
+
     Route::middleware('auth')->group(function(){
         Route::get('/logout',[AuthController::class,'logout']);
      

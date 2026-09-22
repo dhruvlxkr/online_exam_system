@@ -5,14 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\URL;
 use App\Models\PasswordReset;
-use Mail;
-use Illiminate\Support\Facades\Str;
-use Illiminate\Support\Facades\URL;
-use Illiminate\Support\Carbon\Carbon;
+use Illuminate\Support\Carbon;
 
 class AuthController extends Controller
 {
@@ -110,7 +109,24 @@ class AuthController extends Controller
             'email'=>'string|required|email|exists:users,email'
         ]);
 
+        $datetime = Carbon::now()->format('Y-m-d H:i:s');
+       
+        PasswordReset::updateOrCreate(
+              ['email'=>$request->email],
+              ['email'=>$request->email,
+               'token'=>$token,
+               'created_at' => $datetime
+              ]
 
+        );
+        return back()->with('success','Please Check your mail to reset password');
+        
+
+
+     }
+
+     public function loadresetpassword(){
+        return view('reset-password');
      }
 
 }
