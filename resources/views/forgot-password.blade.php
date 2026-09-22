@@ -2,7 +2,7 @@
 
 @section('space-work')
 
-<h1>Login</h1>
+<h1>Forgot Password</h1>
 
 @if($errors->any())
     @foreach($errors->all() as $error)
@@ -15,15 +15,15 @@
     <p style="color:red">{{Session::get('error')}}</p>
   @endif
 
-<form action="{{route('userLogin')}}" method='post' enctype='multipart/form-data'>
+
+ @if(Session::has('success'))
+    <p style="color:green">{{Session::get('success')}}</p>
+  @endif
+
+<form action="{{route('reset-password')}}" method='post' enctype='multipart/form-data'>
     @csrf
      <input type="email" name="email" placeHolder="Enter Your Email" required> <br><br>
-     <input type="password" name="password" placeHolder="Enter Your Password" required> <br><br>
-     <input type="submit" Value="Login" name="login"> <br><br>
+     <input type="submit" Value="Forget Password" name="Forget_password"> <br><br>
 </form>
 
-<a href="/forgot-password">Forgot Password?</a>
-
- 
-
-@endsection
+<a href="/">Login</a>
