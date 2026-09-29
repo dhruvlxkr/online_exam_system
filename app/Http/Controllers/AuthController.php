@@ -78,10 +78,6 @@ class AuthController extends Controller
      }
 
      public function resetPassword(Request $request){
-        dd($request->all());
-            $request->validate([
-            'email'=>'string|required|email|exists:users,email'
-        ]);
        try{
 
        $user =User::where('email',$request->email)->get();
@@ -89,7 +85,7 @@ class AuthController extends Controller
        if(Count($user) > 0){
           $token = Str::random(60);
           $domain = URL::to('/');
-          $url = $domain.'/reset-password?token='.$token;
+          $url = $domain.'/reset-password?token='.$token . '&email=' .$request->email;
 
           $data['url'] = $url;
           $data['email'] = $request->email;
@@ -131,17 +127,27 @@ class AuthController extends Controller
 
         if(isset($resetData) && count($resetData) > 0){
         $user = User::where('email', $request->email)->get();
-
-dd([
-    'request_email' => $request->email,
-    'users_in_db' => User::pluck('email'),
-    'matched_user' => $user,
-]);
             return view('resetPasswordfotgot',compact('user'));
         }else{
-            return "404";
+            return "404 Page Is Expired";
         }
            
      }
+
+     public function postresetpassword(Request $request){
+        $request->validate([
+             'password' => 'required|string|min:6|confirmed'
+        ]);
+
+        $user = User::find($request->id);
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        PasswordReset::where('email',$user->email)->delete();
+
+        return "<h2>Your Password Has Been Reset Successfully</h2>";
+     }
+
+
 
 }
