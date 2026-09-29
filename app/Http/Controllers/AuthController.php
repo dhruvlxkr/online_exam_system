@@ -78,7 +78,10 @@ class AuthController extends Controller
      }
 
      public function resetPassword(Request $request){
-
+        dd($request->all());
+            $request->validate([
+            'email'=>'string|required|email|exists:users,email'
+        ]);
        try{
 
        $user =User::where('email',$request->email)->get();
@@ -105,9 +108,7 @@ class AuthController extends Controller
        }catch(\Exception $e){
          return back()->with('error',$e->getMessage());
        }
-        $request->validate([
-            'email'=>'string|required|email|exists:users,email'
-        ]);
+       
 
         $datetime = Carbon::now()->format('Y-m-d H:i:s');
        
@@ -128,8 +129,14 @@ class AuthController extends Controller
      public function loadresetpassword(Request $request){
         $resetData = PasswordReset::where('token',$request->token)->get();
 
-        if(isset($request->token) && count($resetData) > 0){
-           $user = User::where('email',$request->email)->get();
+        if(isset($resetData) && count($resetData) > 0){
+        $user = User::where('email', $request->email)->get();
+
+dd([
+    'request_email' => $request->email,
+    'users_in_db' => User::pluck('email'),
+    'matched_user' => $user,
+]);
             return view('resetPasswordfotgot',compact('user'));
         }else{
             return "404";
