@@ -1,3 +1,8 @@
+@extends('layout.auth-layout')
+
+@section('title', 'Forgot Password')
+
+@section('content')
 <h5 class="mb-2">Forgot Password? 🔒</h5>
 <p class="mb-4 text-muted">Enter your email and we'll send you a link to reset your password.</p>
 
@@ -16,3 +21,4 @@
     Back to login
   </a>
 </div>
+@endsection

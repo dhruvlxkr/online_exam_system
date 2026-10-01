@@ -1,3 +1,8 @@
+@extends('layout.auth-layout')
+
+@section('title', 'Register')
+
+@section('content')
 <h5 class="mb-3 text-center">Register</h5>
 
 <form id="formAuthentication" class="mb-4" action="{{ route('studentregister') }}" method="POST" enctype="multipart/form-data">
@@ -44,3 +49,4 @@
     <span>Sign in instead</span>
   </a>
 </p>
+@endsection

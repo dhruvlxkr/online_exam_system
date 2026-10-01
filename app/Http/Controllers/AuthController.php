@@ -16,7 +16,7 @@ use Illuminate\Support\Carbon;
 class AuthController extends Controller
 {
     public function loadRegister(){
-        return $this->renderView('register', ['title' => 'Register'], 'layout.auth-layout');
+        return view('register');
     }
 
     public function studentRegister(Request $request)
@@ -37,7 +37,7 @@ class AuthController extends Controller
     }
   
      public function loadLogin(){
-        return $this->renderView('login', ['title' => 'Login'], 'layout.auth-layout');
+        return view('login');
      }
 
      public function userLogin(Request $request){
@@ -63,7 +63,7 @@ class AuthController extends Controller
      }
 
         public function adminDashboard(){
-        return $this->renderView('admin.dashboard', ['title' => 'Dashboard']);
+        return view('admin.dashboard');
      }
 
      public function logout(Request $request){
@@ -74,7 +74,7 @@ class AuthController extends Controller
      }
 
      public function forgotPassword(){
-        return $this->renderView('forgot-password', ['title' => 'Forgot Password'], 'layout.auth-layout');
+        return view('forgot-password');
      }
 
      public function resetPassword(Request $request){
@@ -126,8 +126,8 @@ class AuthController extends Controller
         $resetData = PasswordReset::where('token',$request->token)->get();
 
         if(isset($resetData) && count($resetData) > 0){
-            $user = User::where('email', $request->email)->get();
-            return $this->renderView('resetPasswordfotgot', ['title' => 'Reset Password', 'user' => $user], 'layout.auth-layout');
+            $user = User::where('email', $request->email)->first();
+            return view('resetPasswordfotgot', compact('user'));
         }else{
             return redirect('/forgot-password')->with('error', 'This password reset link has expired or is invalid. Please request a new one.');
         }

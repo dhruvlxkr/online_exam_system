@@ -10,7 +10,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>{{ $title ?? 'Online Exam System' }}</title>
+    <title>@yield('title', 'Online Exam System')</title>
 
     <meta name="description" content="" />
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon/favicon.ico') }}" />
@@ -62,11 +62,7 @@
                   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
               @endif
-              @if(isset($pageContent))
-                @include($pageContent)
-              @else
-                @yield('content')
-              @endif
+              @yield('content')
 
             </div>
           </div>

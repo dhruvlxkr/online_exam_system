@@ -1,3 +1,8 @@
+@extends('layout.auth-layout')
+
+@section('title', 'Login')
+
+@section('content')
 <form id="formAuthentication" class="mb-4" action="{{ route('userLogin') }}" method="POST" enctype="multipart/form-data">
   @csrf
   <div class="mb-3">
@@ -33,3 +38,4 @@
     <span>Create an account</span>
   </a>
 </p>
+@endsection
