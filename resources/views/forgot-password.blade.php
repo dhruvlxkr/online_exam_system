@@ -1,29 +1,18 @@
-@extends('layout/layout-common')
+<h5 class="mb-2">Forgot Password? 🔒</h5>
+<p class="mb-4 text-muted">Enter your email and we'll send you a link to reset your password.</p>
 
-@section('space-work')
-
-<h1>Forgot Password</h1>
-
-@if($errors->any())
-    @foreach($errors->all() as $error)
-        <p style="color:red">{{$error}}</p>
-    @endforeach
-
-@endif
-
- @if(Session::has('error'))
-    <p style="color:red">{{Session::get('error')}}</p>
-  @endif
-
-
- @if(Session::has('success'))
-    <p style="color:green">{{Session::get('success')}}</p>
-  @endif
-
-<form action="{{route('reset-password')}}" method='post' enctype='multipart/form-data'>
-    @csrf
-     <input type="email" name="email" placeHolder="Enter Your Email" required> <br><br>
-     <input type="submit" Value="Forget Password" name="Forget_password"> <br><br>
+<form class="mb-4" action="{{ route('reset-password') }}" method="POST">
+  @csrf
+  <div class="mb-3">
+    <label for="email" class="form-label">Email</label>
+    <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required autofocus />
+  </div>
+  <button class="btn btn-primary d-grid w-100" type="submit">Send Reset Link</button>
 </form>
 
-<a href="/">Login</a>
+<div class="text-center mb-0">
+  <a href="/login" class="d-flex align-items-center justify-content-center">
+    <i class="icon-base bx bx-chevron-left me-1"></i>
+    Back to login
+  </a>
+</div>

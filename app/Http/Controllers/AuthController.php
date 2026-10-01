@@ -16,7 +16,7 @@ use Illuminate\Support\Carbon;
 class AuthController extends Controller
 {
     public function loadRegister(){
-        return view('register');
+        return $this->renderView('register', ['title' => 'Register'], 'layout.auth-layout');
     }
 
     public function studentRegister(Request $request)
@@ -37,7 +37,7 @@ class AuthController extends Controller
     }
   
      public function loadLogin(){
-        return view('login');
+        return $this->renderView('login', ['title' => 'Login'], 'layout.auth-layout');
      }
 
      public function userLogin(Request $request){
@@ -63,7 +63,7 @@ class AuthController extends Controller
      }
 
         public function adminDashboard(){
-        return view('admin.dashboard');
+        return $this->renderView('admin.dashboard', ['title' => 'Dashboard']);
      }
 
      public function logout(Request $request){
@@ -74,7 +74,7 @@ class AuthController extends Controller
      }
 
      public function forgotPassword(){
-        return view('forgot-password');
+        return $this->renderView('forgot-password', ['title' => 'Forgot Password'], 'layout.auth-layout');
      }
 
      public function resetPassword(Request $request){
@@ -126,10 +126,10 @@ class AuthController extends Controller
         $resetData = PasswordReset::where('token',$request->token)->get();
 
         if(isset($resetData) && count($resetData) > 0){
-        $user = User::where('email', $request->email)->get();
-            return view('resetPasswordfotgot',compact('user'));
+            $user = User::where('email', $request->email)->get();
+            return $this->renderView('resetPasswordfotgot', ['title' => 'Reset Password', 'user' => $user], 'layout.auth-layout');
         }else{
-            return "404 Page Is Expired";
+            return redirect('/forgot-password')->with('error', 'This password reset link has expired or is invalid. Please request a new one.');
         }
            
      }
@@ -145,7 +145,7 @@ class AuthController extends Controller
 
         PasswordReset::where('email',$user->email)->delete();
 
-        return "<h2>Your Password Has Been Reset Successfully</h2>";
+        return redirect('/')->with('success','Password Reset Successfully! You can now login with new password' );
      }
 
 
