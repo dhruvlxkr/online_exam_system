@@ -25,6 +25,7 @@ use App\Http\Controllers\AuthController;
      
      Route::middleware('admin')->prefix('admin')->name('admin.')->group(function(){
       Route::get('/dashboard',[AuthController::class,'adminDashboard'])->name('dashboard');
+      Route::get('/subject',[AuthController::class,'subject'])->name('subject');
     });
 
     Route::middleware('student')->prefix('student')->name('student.')->group(function(){
