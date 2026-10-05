@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SubjectController;
 
 
 
@@ -25,11 +26,10 @@ use App\Http\Controllers\AuthController;
      
      Route::middleware('admin')->prefix('admin')->name('admin.')->group(function(){
       Route::get('/dashboard',[AuthController::class,'adminDashboard'])->name('dashboard');
-      Route::get('/subject',[AuthController::class,'subject'])->name('subject');
+      Route::get('/subject',[SubjectController::class,'index'])->name('subject');
     });
 
     Route::middleware('student')->prefix('student')->name('student.')->group(function(){
-     Route::get('/dashboard',[AuthController::class,'userDashboard'])->name('dashboard');
     });
 
     });
