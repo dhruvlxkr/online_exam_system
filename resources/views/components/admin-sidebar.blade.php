@@ -16,21 +16,18 @@
           <div class="menu-inner-shadow"></div>
 
           <ul class="menu-inner py-1">
-            <!-- Dashboards -->
-            <li class="menu-item">
-              <a href="/dashboard" class="menu-link menu-toggle">
+            <li class="menu-item {{ request()->is('admin/dashboard') ? 'active' : '' }}">
+              <a href="/admin/dashboard" class="menu-link ">
                 <i class="menu-icon tf-icons bx bx-home-smile"></i>
                 <div class="text-truncate" data-i18n="Dashboards">Dashboards</div>
               </a>
             </li>
 
-            <!-- Layouts -->
-            <li class="menu-item active open">
-              <a href="/subject" class="menu-link menu-toggle">
+            <li class="menu-item {{ request()->is('admin/subject') ? 'active' : '' }}">
+              <a href="/admin/subject" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-layout"></i>
                 <div class="text-truncate" data-i18n="Layouts">Subject</div>
               </a>
             </li>
           </ul>
         </aside>
-        <!-- / Menu -->

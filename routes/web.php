@@ -26,7 +26,9 @@ use App\Http\Controllers\SubjectController;
      
      Route::middleware('admin')->prefix('admin')->name('admin.')->group(function(){
       Route::get('/dashboard',[AuthController::class,'adminDashboard'])->name('dashboard');
+
       Route::get('/subject',[SubjectController::class,'index'])->name('subject');
+      Route::post('/subjectadd', [SubjectController::class,'store'])->name('subject.store');
     });
 
     Route::middleware('student')->prefix('student')->name('student.')->group(function(){
