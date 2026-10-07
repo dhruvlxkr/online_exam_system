@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SubjectController;
+Use App\Http\Controllers\ExamController;
 
 
 
@@ -32,6 +33,13 @@ use App\Http\Controllers\SubjectController;
       Route::post('/subjectadd', [SubjectController::class,'store'])->name('subject.store');
       Route::post('/subjectupdate', [SubjectController::class,'update'])->name('subject.update');
       Route::post('/subjectdelete', [SubjectController::class,'destroy'])->name('subject.destroy');
+
+
+      // Exam Routes
+      Route::get('/exam',[ExamController::class,'index'])->name('exam');
+      Route::post('/examadd', [ExamController::class,'store'])->name('exam.store');
+      Route::post('/examupdate', [ExamController::class,'update'])->name('exam.update');
+      Route::post('/examdelete', [ExamController::class,'destroy'])->name('exam.destroy');
     });
 
     Route::middleware('student')->prefix('student')->name('student.')->group(function(){

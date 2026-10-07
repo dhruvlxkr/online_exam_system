@@ -50,7 +50,7 @@
     <div class="modal fade" id="addSubjectModal" tabindex="-1" aria-hidden="true">
         <form id="addSubjectForm">
             @csrf
-            <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel4">Add Subject</h5>
@@ -58,10 +58,10 @@
                     </div>
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col mb-6">
+                            <div class="col mb-3">
                                 <label for="subjectName" class="form-label">Subject Name</label>
                                 <input type="text" id="subjectName" name="subjectName" class="form-control"
-                                    placeholder="Enter SubjectName" />
+                                    placeholder="Enter Subject Name" />
                                 <span class="text-danger error-text subjectName_error"></span>
                             </div>
                         </div>
@@ -74,15 +74,14 @@
                     </div>
                 </div>
             </div>
-    </div>
-    </form>
+        </form>
     </div>
 
     <div class="modal fade" id="editSubjectModal" tabindex="-1" aria-hidden="true">
         <form id="editSubjectForm">
             @csrf
 
-            <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-dialog" role="document">
                 <div class="modal-content">
 
                     <div class="modal-header">
@@ -95,7 +94,7 @@
                     <div class="modal-body">
 
                         <div class="row">
-                            <div class="col mb-6">
+                            <div class="col mb-3">
 
                                 <label for="editSubjectName" class="form-label">
                                     Subject Name
@@ -134,7 +133,7 @@
         <form id="deleteSubjectForm">
             @csrf
 
-            <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-dialog modal-sm" role="document">
                 <div class="modal-content">
 
                     <div class="modal-header">
