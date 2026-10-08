@@ -12,9 +12,10 @@ class ExamController extends Controller
 {
  
    public function index(){
-    $subjects = Exam:: with('subject')->get();
+    $subjects = Subject::all();
+    $exams = Exam::with('subjects')->get();
     // dd($subjects);
-    return view('admin.exams.exam',['subjects' => $subjects ]);
+    return view('admin.exams.exam',['subjects' => $subjects,'exams' => $exams ]);
    }
 
 
@@ -30,7 +31,7 @@ class ExamController extends Controller
             'success' => true,
             'message' => "Exam Submitted Successfully"
         ]);
-    }catch(\Expception $e){
+    }catch(\Exception $e){
         return response()->json([
             'success' => true,
             'message' => $e->getMessage()
@@ -38,4 +39,41 @@ class ExamController extends Controller
     }
    }
 
+   public function examDetailsget($id){
+      try{
+        
+      $examData = Exam::where('id',$id)->get();
+        return response()->json([
+           'success' => true,
+           'data' => $examData
+        ]);
+      }catch(\Exception $e){
+        return response()->json([
+           'success' => false,
+           'message' => $e->getMessage()
+        ]);
+      }
+   }
+
+   public function update(Request $request){
+   try{
+      Exam::where('id',$request->exam_id)->update([
+           'subject_id' => $request->subjectName1,
+           'exam_name' => $request->examName1,
+           'exam_date' => $request->examDate1,
+           'exam_time' => $request->examTime1,
+
+      ]);
+       return response()->json([
+            'success' => true,
+            'message' => "Your Data Updated Successfully"
+        ]);
+   }catch(\Exception $e){
+        return response()->json([
+            'success' => false,
+            'message' =>$e->getMessage()
+        ]);
+   }
+
+}
 }

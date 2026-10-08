@@ -15,7 +15,7 @@ class Exam extends Model
         'exam_time'
     ];  
 
-    public function subject(){
+    public function subjects(){
         return $this->hasMany(Subject::class,'id','subject_id');
     }
 }   

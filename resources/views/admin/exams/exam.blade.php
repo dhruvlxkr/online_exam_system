@@ -23,21 +23,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if ($subjects->count() > 0)
-                            @foreach ($subjects as $subject)
+                        @if ($exams->count() > 0)
+                            @foreach ($exams as $exam)
                                 <tr>
 
                                     <td scope="row">{{ $loop->iteration }}</td>
-                                    <td>{{ $subject->exam_name }}</td>
-                                    <td>{{ $subject->subject_id }}</td>
-                                    <td>{{ $subject->exam_date }}</td>
-                                    <td>{{ $subject->exam_time }}</td>
+                                    <td>{{ $exam->exam_name }}</td>
+                                    <td>{{ $exam->subjects[0]['subject_name'] }}</td>
+                                    <td>{{ $exam->exam_date }}</td>
+                                    <td>{{ $exam->exam_time }} Hrs</td>
                                     <td>
                                         <button type="button" class="btn btn-sm btn-warning editExamBtn"
-                                            data-bs-toggle="modal" data-bs-target="#editExamModal">Edit</button>
+                                            data-bs-toggle="modal" data-bs-target="#editExamModal"
+                                            data-id="{{ $exam->id }}">Edit</button>
                                         <button type="button" class="btn btn-sm btn-danger deleteExamBtn"
-                                            id="deleteExamBtn" data-bs-toggle="modal"
-                                            data-bs-target="#deleteExamModal">Delete</button>
+                                            id="deleteExamBtn" data-bs-toggle="modal" data-bs-target="#deleteExamModal"
+                                            data-id="{{ $exam->id }}">Delete</button>
                                     </td>
 
 
@@ -105,6 +106,59 @@
         </form>
     </div>
 
+
+    <div class="modal fade" id="editExamModal" tabindex="-1" aria-hidden="true">
+        <form id="updateExam">
+            @csrf
+            <input type="hidden" id="exam_id" name="exam_id" />
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel4">Add Exam</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <label for="examName1" class="form-label">Exam Name</label>
+                                <input type="text" id="examName1" name="examName1" class="form-control"
+                                    placeholder="Enter Exam Name" />
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="subjectName1" class="form-label">Subject Name</label>
+                                <select class="form-select" id="subjectName1" name="subjectName1">
+                                    <option value="">Select Subject</option>
+                                    @foreach ($subjects as $subject)
+                                        <option value="{{ $subject->id }}">{{ $subject->subject_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label for="examDate1" class="form-label">Exam Date</label>
+                                <input type="date" id="examDate1" name="examDate1" class="form-control"
+                                    placeholder="Enter Exam Date" min="<?php echo date('Y-m-d'); ?>" />
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label for="examTime1" class="form-label">Exam Time</label>
+                                <input type="time" id="examTime1" name="examTime1" class="form-control"
+                                    placeholder="Enter Exam Time" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                        <button type="submit" name="updatebtn" id="updatebtn" class="btn btn-primary">Update</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <script>
@@ -112,7 +166,7 @@
             $('#addExam').on('submit', function(e) {
                 e.preventDefault();
 
-                var formData = $(this).serialize();
+                let formData = $(this).serialize();
 
                 $.ajax({
                     url: "{{ route('admin.exam.store') }}",
@@ -128,6 +182,47 @@
                 })
 
 
+            });
+
+            $('.editExamBtn').on('click', function() {
+                let examid = $(this).attr('data-id');
+                $("#exam_id").val(examid);
+                $.ajax({
+                    url: "{{ url('admin/examdetail') }}/" + examid,
+                    type: 'GET',
+                    success: function(response) {
+                        if (response.success == true) {
+                            var examData = response.data;
+                            $('#examName1').val(examData[0].exam_name);
+                            $('#subjectName1').val(examData[0].subject_id);
+                            $('#examDate1').val(examData[0].exam_date);
+                            $('#examTime1').val(examData[0].exam_time);
+                        }
+                    }
+                });
+            });
+
+            $('#updateExam').on('submit', function(e) {
+                e.preventDefault();
+                let formdata = $(this).serialize();
+                $.ajax({
+                    url: "{{ route('admin.exam.update') }}",
+                    type: "POST",
+                    data: formdata,
+                    success: function(response) {
+                        if (response.success == true) {
+                            // alert(response.message);
+                            location.reload();
+                        } else {
+                            alert(response.message);
+                        }
+                    }
+                });
+            });
+
+            $('#deleteExamBtn').on('click', function() {
+                let id = (this).attr('data-id');
+                alert(id);
             });
         });
     </script>

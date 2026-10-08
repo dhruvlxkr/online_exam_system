@@ -38,10 +38,13 @@ Use App\Http\Controllers\ExamController;
       // Exam Routes
       Route::get('/exam',[ExamController::class,'index'])->name('exam');
       Route::post('/examadd', [ExamController::class,'store'])->name('exam.store');
+      Route::get('/examdetail/{id}',[ExamController::class,'examDetailsget'])->name('exam.examDetailsget');
       Route::post('/examupdate', [ExamController::class,'update'])->name('exam.update');
       Route::post('/examdelete', [ExamController::class,'destroy'])->name('exam.destroy');
     });
 
+
+     //Students Routes
     Route::middleware('student')->prefix('student')->name('student.')->group(function(){
     });
 
