@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SubjectController;
 Use App\Http\Controllers\ExamController;
+Use App\Http\Controllers\QuestionsController;
 
 
 
@@ -41,6 +42,10 @@ Use App\Http\Controllers\ExamController;
       Route::get('/examdetail/{id}',[ExamController::class,'examDetailsget'])->name('exam.examDetailsget');
       Route::post('/examupdate', [ExamController::class,'update'])->name('exam.update');
       Route::post('/examdelete', [ExamController::class,'destroy'])->name('exam.destroy');
+
+
+      // Quations & Answer Routes
+      Route::get('/question',[QuestionsController::class,'index'])->name('question');
     });
 
 

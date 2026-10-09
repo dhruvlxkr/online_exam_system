@@ -19,6 +19,7 @@
                             <th scope="col">Subject Name</th>
                             <th scope="col">Exam Date</th>
                             <th scope="col">Exam Time</th>
+                            <th scope="col">Attempt Time</th>
                             <th scope="col">Actions</th>
                         </tr>
                     </thead>
@@ -32,6 +33,7 @@
                                     <td>{{ $exam->subjects[0]['subject_name'] }}</td>
                                     <td>{{ $exam->exam_date }}</td>
                                     <td>{{ $exam->exam_time }} Hrs</td>
+                                    <td>{{ $exam->attemp }} Time</td>
                                     <td>
                                         <button type="button" class="btn btn-sm btn-warning editExamBtn"
                                             data-bs-toggle="modal" data-bs-target="#editExamModal"
@@ -46,7 +48,7 @@
                             @endforeach
                         @else
                             <tr>
-                                <td colspan="6">Data Not Found</td>
+                                <td colspan="7" class="text-center">Data Not Found</td>
                             </tr>
                         @endif
                     </tbody>
@@ -92,6 +94,12 @@
                                 <label for="examTime" class="form-label">Exam Time</label>
                                 <input type="time" id="examTime" name="examTime" class="form-control"
                                     placeholder="Enter Exam Time" />
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label for="attemp" class="form-label">Attemp</label>
+                                <input type="number" min="1" value="1" id="attemp" name="attemp"
+                                    class="form-control" placeholder="Enter Attemp Number" />
                             </div>
                         </div>
                     </div>
@@ -145,6 +153,11 @@
                                 <input type="time" id="examTime1" name="examTime1" class="form-control"
                                     placeholder="Enter Exam Time" />
                             </div>
+                            <div class="col-12 mb-3">
+                                <label for="attemp1" class="form-label">Attemp</label>
+                                <input type="number" min="1" id="attemp1" name="attemp1" class="form-control"
+                                    placeholder="Enter Attemp Number" />
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -197,6 +210,7 @@
                             $('#subjectName1').val(examData[0].subject_id);
                             $('#examDate1').val(examData[0].exam_date);
                             $('#examTime1').val(examData[0].exam_time);
+                            $('#attemp1').val(examData[0].attemp);
                         }
                     }
                 });
@@ -220,9 +234,31 @@
                 });
             });
 
-            $('#deleteExamBtn').on('click', function() {
-                let id = (this).attr('data-id');
-                alert(id);
+            $('.deleteExamBtn').on('click', function() {
+                let examId = $(this).attr('data-id');
+                let row = $(this).closest('tr');
+
+                if (confirm("Are you sure you want to delete this Exam?")) {
+                    $.ajax({
+                        url: "{{ route('admin.exam.destroy') }}",
+                        type: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            examid: examId
+                        },
+                        success: function(response) {
+                            console.log(response);
+                            if (response.success == true) {
+                                row.remove();
+                                alert(response.message);
+                                location.reload();
+                            } else {
+                                alert(response.message);
+                            }
+
+                        }
+                    })
+                }
             });
         });
     </script>

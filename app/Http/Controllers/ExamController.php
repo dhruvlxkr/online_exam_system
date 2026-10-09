@@ -25,7 +25,8 @@ class ExamController extends Controller
         'exam_name' => $request->examName,
         'subject_id' => $request->subjectName,
         'exam_date' => $request->examDate, 
-        'exam_time' => $request->examTime
+        'exam_time' => $request->examTime,
+        'attemp' => $request->attemp
      ]);
     return response()->json([
             'success' => true,
@@ -62,6 +63,7 @@ class ExamController extends Controller
            'exam_name' => $request->examName1,
            'exam_date' => $request->examDate1,
            'exam_time' => $request->examTime1,
+           'attemp' => $request->attemp1
 
       ]);
        return response()->json([
@@ -76,4 +78,19 @@ class ExamController extends Controller
    }
 
 }
+
+  public function destroy(Request $request){
+   try{
+   Exam::where('id',$request->examid)->delete();
+   return response()->json([
+      'success' => true,
+      'message' => "Exam Delete Successfully"
+   ]);
+   }catch(\Exception $e){
+       return response()->json([
+      'success' => false,
+      'message' =>  $e->getMessage()]);
+   }
+  
+  }
 }
