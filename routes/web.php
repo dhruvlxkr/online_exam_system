@@ -45,7 +45,7 @@ Use App\Http\Controllers\QuestionsController;
 
 
       // Quations & Answer Routes
-      Route::get('/question',[QuestionsController::class,'index'])->name('question');
+      Route::get('/ques-ans',[QAController::class,'index'])->name('ques-ans');
     });
 
 

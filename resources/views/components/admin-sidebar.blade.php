@@ -37,8 +37,8 @@
              </a>
          </li>
 
-         <li class="menu-item {{ request()->is('admin/question') ? 'active' : '' }}">
-             <a href="/admin/question" class="menu-link">
+         <li class="menu-item {{ request()->is('admin/ques-ans') ? 'active' : '' }}">
+             <a href="/admin/ques-ans" class="menu-link">
                  <i class="menu-icon tf-icons bx bx-layout"></i>
                  <div class="text-truncate" data-i18n="Layouts">Quetions</div>
              </a>
