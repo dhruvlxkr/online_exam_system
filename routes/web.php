@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SubjectController;
 Use App\Http\Controllers\ExamController;
-Use App\Http\Controllers\QuestionsController;
+Use App\Http\Controllers\QAController;
 
 
 
@@ -46,6 +46,7 @@ Use App\Http\Controllers\QuestionsController;
 
       // Quations & Answer Routes
       Route::get('/ques-ans',[QAController::class,'index'])->name('ques-ans');
+      Route::post('/addqa',[QAController::class,'store'])->name('ques-ans.addqa');
     });
 
 

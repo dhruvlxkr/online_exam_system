@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Questions;
 use Illuminate\Http\Request;
+use App\Models\Questions;
+use App\Models\Answers;
 
 class QAController extends Controller
 {
@@ -12,7 +13,7 @@ class QAController extends Controller
      */
     public function index()
     {
-        return view('admin.questions.ques-ans');
+        return view('admin.questions.que-ans');
     }
 
     /**
@@ -28,13 +29,13 @@ class QAController extends Controller
      */
     public function store(Request $request)
     {
-        //
+       Questions::with('id','Answers');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Questions $questions)
+    public function show(string $id)
     {
         //
     }
@@ -42,7 +43,7 @@ class QAController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Questions $questions)
+    public function edit(string $id)
     {
         //
     }
@@ -50,7 +51,7 @@ class QAController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Questions $questions)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -58,7 +59,7 @@ class QAController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Questions $questions)
+    public function destroy(string $id)
     {
         //
     }
