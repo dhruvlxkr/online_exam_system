@@ -29,7 +29,7 @@ class QAController extends Controller
      */
     public function store(Request $request)
     {
-       Questions::with('id','Answers');
+       return response()->json($request->all());
     }
 
     /**

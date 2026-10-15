@@ -92,22 +92,20 @@
                 } else {
                     let html = `
         <div class="row mt-2 align-items-center asnwersrows">
-            <div class="col-1 text-center">
-                <input type="radio"
-                       name="correct_answer" class="correct_answer"
-                       value="${ansindex}">
-            </div>
-            <div class="col-9">
-                <input type="text"
-                       name="answers[]"
-                       class="form-control"
-                       placeholder="Enter Answer"
-                       autocomplete="off" required>
-            </div>
-             <div class="col-2">
-                <button class="btn btn-danger btn-sm delete">Delete</button>
-            </div>
-        </div>
+    <div class="col-9 d-flex align-items-center gap-2">
+        <input type="radio"
+               name="correct_answer" class="correct_answer"
+               value="${ansindex}">
+        <input type="text"
+               name="answers[]"
+               class="form-control"
+               placeholder="Enter Answer"
+               autocomplete="off" required>
+    </div>
+    <div class="col-2">
+        <button class="btn btn-danger btn-sm delete">Delete</button>
+    </div>
+</div>
     `;
 
                     $('#answerContainer').append(html);
@@ -135,19 +133,18 @@
                     for (var i = 0; i < $(".correct_answer").length; i++) {
                         if ($(".correct_answer:eq(" + i + ")").is(':checked') == true) {
                             checkIscorrect = true;
-                            $(".correct_answer:eq(" + i + ")").val($(".correct_answer:eq(" + i + ")")
-                                .next().find('input').val());
+                            $(".correct_answer:eq(" + i + ")").closest('.asnwersrows').find('input[type="text"]').val();
                         }
                     }
 
                     if (checkIscorrect) {
                         var formdata = $(this).serialize();
-
                         $.ajax({
                             url: "{{ route('admin.ques-ans.addqa') }}",
                             type: "POST",
                             data: formdata,
                             success: function(response) {
+                            
                                 if (response.success == true) {
                                     location.reload();
                                 } else {
