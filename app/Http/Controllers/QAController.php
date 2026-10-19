@@ -29,7 +29,15 @@ class QAController extends Controller
      */
     public function store(Request $request)
     {
-       return response()->json($request->all());
+       try{
+        
+
+       }catch(\Exception $e){
+        return response()->json([
+            'success' => true,
+            'message' => $e->getMessage()
+        ]);
+    }
     }
 
     /**

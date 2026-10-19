@@ -133,7 +133,8 @@
                     for (var i = 0; i < $(".correct_answer").length; i++) {
                         if ($(".correct_answer:eq(" + i + ")").is(':checked') == true) {
                             checkIscorrect = true;
-                            $(".correct_answer:eq(" + i + ")").closest('.asnwersrows').find('input[type="text"]').val();
+                            $(".correct_answer:eq(" + i + ")").closest('.asnwersrows').find(
+                                'input[type="text"]').val();
                         }
                     }
 
@@ -144,7 +145,6 @@
                             type: "POST",
                             data: formdata,
                             success: function(response) {
-                            
                                 if (response.success == true) {
                                     location.reload();
                                 } else {
