@@ -84,7 +84,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         $(document).ready(function() {
-            let ansindex = 1;
+            function reindexAnswers() {
+                $('.asnwersrows').each(function(index) {
+                    $(this).find('.correct_answer').val(index);
+                });
+            }
+
             $('#addansrow').on('click', function() {
                 if ($('.asnwersrows').length >= 4) {
                     $(".error").text("Maximum Four Answer Add");
@@ -95,7 +100,7 @@
     <div class="col-9 d-flex align-items-center gap-2">
         <input type="radio"
                name="correct_answer" class="correct_answer"
-               value="${ansindex}">
+               value="">
         <input type="text"
                name="answers[]"
                class="form-control"
@@ -109,7 +114,7 @@
     `;
 
                     $('#answerContainer').append(html);
-                    ansindex++;
+                    reindexAnswers();
                 }
 
 
@@ -117,7 +122,8 @@
 
             $(document).on('click', '.delete', function() {
                 $(this).closest('.asnwersrows').remove();
-            })
+                reindexAnswers();
+            });
 
             $('#addQAForm').on('submit', function(e) {
                 e.preventDefault();
@@ -139,6 +145,7 @@
                     }
 
                     if (checkIscorrect) {
+                        reindexAnswers();
                         var formdata = $(this).serialize();
                         $.ajax({
                             url: "{{ route('admin.ques-ans.addqa') }}",

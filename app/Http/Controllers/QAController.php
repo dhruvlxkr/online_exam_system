@@ -30,17 +30,23 @@ class QAController extends Controller
     public function store(Request $request)
     {
        try{
-        //  $questionId = Questions::insertGetId([
-        //     'questions' => $request->question
-        //  ]);
 
-         foreach($request->answers as $answer){
-            dd($answer);
-        //     Answers::insert([
-        //     'question_id' => $questionId,
-        //     'answer' => $request->$answer,
-        //     'is_correct'->$request->correct_answer
-        //  ]);
+          $request->validate([
+            'question' => 'required|string',
+            'answers' => 'required|array|min:2',
+            'answers.*' => 'required|string',
+            'correct_answer' => 'required|integer|min:0',
+        ]);
+         $questionId = Questions::insertGetId([
+            'questions' => $request->question
+         ]);
+
+         foreach($request->answers as $index => $answer){
+            Answers::insert([
+            'question_id' => $questionId,
+            'answer' => $answer,
+            'is_correct'=>($index == $request->correct_answer)? 1 : 0
+         ]);
          }
          
         return response()->json([
