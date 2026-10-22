@@ -30,11 +30,26 @@ class QAController extends Controller
     public function store(Request $request)
     {
        try{
-        
+        //  $questionId = Questions::insertGetId([
+        //     'questions' => $request->question
+        //  ]);
 
-       }catch(\Exception $e){
+         foreach($request->answers as $answer){
+            dd($answer);
+        //     Answers::insert([
+        //     'question_id' => $questionId,
+        //     'answer' => $request->$answer,
+        //     'is_correct'->$request->correct_answer
+        //  ]);
+         }
+         
         return response()->json([
             'success' => true,
+            'message' => "Your Question And Answer Inserted Successfully"
+        ]);
+       }catch(\Exception $e){
+        return response()->json([
+            'success' => false,
             'message' => $e->getMessage()
         ]);
     }
