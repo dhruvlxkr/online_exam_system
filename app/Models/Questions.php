@@ -10,4 +10,8 @@ class Questions extends Model
   protected $fillable = [
     'questions',
    ];
+
+   public function answers(){
+      return $this->hasmany(Answers::class,'question_id','id');
+   }
 }

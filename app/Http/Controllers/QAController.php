@@ -13,7 +13,8 @@ class QAController extends Controller
      */
     public function index()
     {
-        return view('admin.questions.que-ans');
+       $quetions =  Questions::with('answers')->get();
+        return view('admin.questions.que-ans',compact('quetions'));
     }
 
     /**

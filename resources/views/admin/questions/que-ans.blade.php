@@ -17,25 +17,38 @@
                             <th scope="col">#</th>
                             <th scope="col">Questions</th>
                             <th scope="col">Answer</th>
-                            <th scope="col">Is Correct</th>
                             <th scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th scope="row"></th>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>
-                                <button type="button" class="btn btn-sm btn-warning editSubjecBtn" data-id=""
-                                    data-bs-toggle="modal" data-bs-target="#editSubjectModal">Edit</button>
-                                <button type="button" class="btn btn-sm btn-danger deleteSubjectBtn" id="deleteSubjectBtn"
-                                    data-id="" data-bs-toggle="modal"
-                                    data-bs-target="#deleteSubjectModal">Delete</button>
-                            </td>
+                        @if (count($quetions) > 0)
+                            @foreach ($quetions as $question)
+                                <tr>
+                                    <th scope="row">{{ $loop->iteration }}</th>
+                                    <td>{{ $question->questions }}</td>
+                                    <td>
+                                        <a href="#" class="ansButton" data-id="{{ $question->id }}"
+                                            data-bs-toggle="modal" data-bs-target="#seeAnswers">See answers</a>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-warning editq&aBtn"
+                                            data-id="{{ $question->id }}" data-bs-toggle="modal"
+                                            data-bs-target="#editq&aModal">Edit</button>
+                                        <button type="button" class="btn btn-sm btn-danger deleteq&aBtn" id="deleteq&aBtn"
+                                            data-id="{{ $question->id }}" data-bs-toggle="modal"
+                                            data-bs-target="#deleteq&aModal">Delete</button>
+                                    </td>
 
-                        </tr>
+                                </tr>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="5">Data Not Found</td>
+                            </tr>
+
+                        @endif
+
+
 
                     </tbody>
                 </table>
@@ -75,6 +88,80 @@
                             Close
                         </button>
                         <button type="submit" name="submitbtn" id="submitbtn" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal fade" id="seeAnswers" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel4">Show Answers</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <table class="table table-border">
+                                <thead>
+                                    <th>#</th>
+                                    <th>Answers</th>
+                                    <th>Correct Answer</th>
+                                </thead>
+                                <tbody id="showAnswer">
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+                {{-- <div class="modal-footer">
+                    <span class="error text-danger"></span>
+                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="submit" name="submitbtn" id="submitbtn" class="btn btn-primary">Save</button>
+                </div> --}}
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="editq&aModal" tabindex="-1" aria-hidden="true">
+        <form id="editQAForm">
+            @csrf
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel4">Edit Question & Answer</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body editModelAnswer">
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <input type="hidden" id="qid" name="qid">
+                                <label class="form-label">Question</label>
+                                <input type="text" name="question" id="question" class="form-control"
+                                    placeholder="Enter Question" autocomplete="off" required>
+
+                                <button type="button" class="btn btn-primary btn-sm mt-3" id="editansrow">
+                                    Edit Answer
+                                </button>
+                            </div>
+
+                            <div class="col-12 mb-3" id="answerContainer">
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <span class="editError text-danger"></span>
+                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                        <button type="submit" name="submitbtn" id="submitbtn" class="btn btn-primary">Update</button>
                     </div>
                 </div>
             </div>
@@ -125,6 +212,50 @@
                 reindexAnswers();
             });
 
+            $('#editQAForm').on('submit', function(e) {
+                e.preventDefault();
+
+                if ($('.asnwersrows').length < 2) {
+                    $(".error").text("Please Add Minimum Two Answer");
+                    setTimeout(() => {
+                        $(".error").text("");
+                    }, 2000);
+                } else {
+                    var checkIscorrect = false;
+
+                    for (var i = 0; i < $(".correct_answer").length; i++) {
+                        if ($(".correct_answer:eq(" + i + ")").is(':checked') == true) {
+                            checkIscorrect = true;
+                            $(".correct_answer:eq(" + i + ")").closest('.asnwersrows').find(
+                                'input[type="text"]').val();
+                        }
+                    }
+
+                    if (checkIscorrect) {
+                        reindexAnswers();
+                        var formdata = $(this).serialize();
+                        $.ajax({
+                            url: "{{ route('admin.ques-ans.addqa') }}",
+                            type: "POST",
+                            data: formdata,
+                            success: function(response) {
+                                if (response.success == true) {
+                                    location.reload();
+                                } else {
+                                    alert('Data Submit Failed');
+                                }
+                            }
+                        });
+
+                    } else {
+                        $(".error").text("Please Select Anyone");
+                        setTimeout(() => {
+                            $(".error").text("");
+                        }, 2000);
+                    }
+                }
+            });
+
             $('#addQAForm').on('submit', function(e) {
                 e.preventDefault();
 
@@ -167,6 +298,37 @@
                         }, 2000);
                     }
                 }
+            });
+
+            $(".ansButton").on('click', function() {
+                let questions = @json($quetions);
+                let qid = $(this).attr('data-id');
+                let html;
+                for (let i = 0; i < questions.length; i++) {
+
+                    if (questions[i]['id'] == qid) {
+
+                        var answersLength = questions[i]['answers'].length;
+                        for (let j = 0; j < answersLength; j++) {
+                            let is_correct = 'No';
+                            if (questions[i]['answers'][j]['is_correct'] == 1) {
+                                is_correct = 'Yes';
+                            }
+                            html += `
+                            <tr>
+                                <td>` + (j + 1) + `</td>  
+                                <td>` + questions[i]['answers'][j]['answer'] + `</td>
+                                <td>` + is_correct + `</td>  
+                            </tr>
+                            `
+                        }
+                        break;
+                    }
+
+                }
+
+                $('#showAnswer').html(html);
+
             });
 
         });
