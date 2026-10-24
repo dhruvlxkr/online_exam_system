@@ -31,7 +31,7 @@
                                             data-bs-toggle="modal" data-bs-target="#seeAnswers">See answers</a>
                                     </td>
                                     <td>
-                                        <button type="button" class="btn btn-sm btn-warning editq&aBtn"
+                                        <button type="button" class="btn btn-sm btn-warning editqaBtn"
                                             data-id="{{ $question->id }}" data-bs-toggle="modal"
                                             data-bs-target="#editq&aModal">Edit</button>
                                         <button type="button" class="btn btn-sm btn-danger deleteq&aBtn" id="deleteq&aBtn"
@@ -143,7 +143,7 @@
                             <div class="col-12 mb-3">
                                 <input type="hidden" id="qid" name="qid">
                                 <label class="form-label">Question</label>
-                                <input type="text" name="question" id="question" class="form-control"
+                                <input type="text" name="edit_question" id="edit_question" class="form-control"
                                     placeholder="Enter Question" autocomplete="off" required>
 
                                 <button type="button" class="btn btn-primary btn-sm mt-3" id="editansrow">
@@ -151,7 +151,7 @@
                                 </button>
                             </div>
 
-                            <div class="col-12 mb-3" id="answerContainer">
+                            <div class="col-12 mb-3" id="editanswerContainer">
                             </div>
 
                         </div>
@@ -207,26 +207,56 @@
 
             });
 
+            $('#editansrow').on('click', function() {
+                if ($('.editasnwersrows').length >= 4) {
+                    $(".editError").text("Maximum Four Answer Add");
+                    return;
+                } else {
+                    let html = `
+        <div class="row mt-2 align-items-center editasnwersrows">
+    <div class="col-9 d-flex align-items-center gap-2">
+        <input type="radio"
+               name="edit_correct_answer" class="edit_correct_answer"
+               value="">
+        <input type="text"
+               name="new_answers[]"
+               class="form-control"
+               placeholder="Enter Answer"
+               autocomplete="off" required>
+    </div>
+    <div class="col-2">
+        <button class="btn btn-danger btn-sm delete">Delete</button>
+    </div>
+</div>
+    `;
+
+                    $('#editanswerContainer').append(html);
+                    reindexAnswers();
+                }
+
+
+            });
+
             $(document).on('click', '.delete', function() {
-                $(this).closest('.asnwersrows').remove();
+                $(this).closest('.editasnwersrows').remove();
                 reindexAnswers();
             });
 
             $('#editQAForm').on('submit', function(e) {
                 e.preventDefault();
 
-                if ($('.asnwersrows').length < 2) {
-                    $(".error").text("Please Add Minimum Two Answer");
+                if ($('.editasnwersrows').length < 2) {
+                    $(".editError").text("Please Add Minimum Two Answer");
                     setTimeout(() => {
-                        $(".error").text("");
+                        $(".editError").text("");
                     }, 2000);
                 } else {
                     var checkIscorrect = false;
 
-                    for (var i = 0; i < $(".correct_answer").length; i++) {
-                        if ($(".correct_answer:eq(" + i + ")").is(':checked') == true) {
+                    for (var i = 0; i < $(".edit_correct_answer").length; i++) {
+                        if ($(".edit_correct_answer:eq(" + i + ")").is(':checked') == true) {
                             checkIscorrect = true;
-                            $(".correct_answer:eq(" + i + ")").closest('.asnwersrows').find(
+                            $(".edit_correct_answer:eq(" + i + ")").closest('.editasnwersrows').find(
                                 'input[type="text"]').val();
                         }
                     }
@@ -235,7 +265,7 @@
                         reindexAnswers();
                         var formdata = $(this).serialize();
                         $.ajax({
-                            url: "{{ route('admin.ques-ans.addqa') }}",
+                            url: "{{ route('admin.ques-ans.editaddqa') }}",
                             type: "POST",
                             data: formdata,
                             success: function(response) {
@@ -329,6 +359,22 @@
 
                 $('#showAnswer').html(html);
 
+            });
+
+            $('.editqaBtn').on('click', function() {
+                var qid = $(this).attr('data-id');
+                $.ajax({
+                    'url': "{{ route('admin.ques-ans.getqaDetails') }}",
+                    'type': 'GET',
+                    'data': qid,
+                    'success': function(response) {
+                        if (response.data) {
+                            $('edit_question').val('response.questions');
+                        } else {
+                            alert("Not Data Found")
+                        }
+                    }
+                });
             });
 
         });

@@ -65,9 +65,12 @@ class QAController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request)
     {
-        //
+        $qa = Questions::where('id',$request->qid)->with('answers')->get();
+        return response()->json([
+             'data' => $qa
+        ]);
     }
 
     /**
@@ -81,7 +84,7 @@ class QAController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
         //
     }

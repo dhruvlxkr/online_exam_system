@@ -47,6 +47,8 @@ Use App\Http\Controllers\QAController;
       // Quations & Answer Routes
       Route::get('/ques-ans',[QAController::class,'index'])->name('ques-ans');
       Route::post('/addqa',[QAController::class,'store'])->name('ques-ans.addqa');
+      Route::get('/getqaDetails',[QAController::class,'show'])->name('ques-ans.getqaDetails');
+       Route::post('/editaddqa',[QAController::class,'store'])->name('ques-ans.editaddqa');
     });
 
 
