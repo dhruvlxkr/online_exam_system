@@ -195,7 +195,7 @@
                autocomplete="off" required>
     </div>
     <div class="col-2">
-        <button class="btn btn-danger btn-sm delete">Delete</button>
+        <button type="button" class="btn btn-danger btn-sm delete">Delete</button>
     </div>
 </div>
     `;
@@ -225,20 +225,19 @@
                autocomplete="off" required>
     </div>
     <div class="col-2">
-        <button class="btn btn-danger btn-sm delete">Delete</button>
+        <button type="button" class="btn btn-danger btn-sm delete">Delete</button>
     </div>
 </div>
     `;
 
                     $('#editanswerContainer').append(html);
-                    reindexAnswers();
                 }
 
 
             });
 
             $(document).on('click', '.delete', function() {
-                $(this).closest('.editasnwersrows').remove();
+                $(this).closest('.asnwersrows, .editasnwersrows').remove();
                 reindexAnswers();
             });
 
@@ -256,13 +255,15 @@
                     for (var i = 0; i < $(".edit_correct_answer").length; i++) {
                         if ($(".edit_correct_answer:eq(" + i + ")").is(':checked') == true) {
                             checkIscorrect = true;
-                            $(".edit_correct_answer:eq(" + i + ")").closest('.editasnwersrows').find(
-                                'input[type="text"]').val();
+                            let currentVal = $(".edit_correct_answer:eq(" + i + ")").val();
+                            let textVal = $(".edit_correct_answer:eq(" + i + ")").closest('.editasnwersrows').find('input[type="text"]').val();
+                            if (!currentVal) {
+                                $(".edit_correct_answer:eq(" + i + ")").val(textVal);
+                            }
                         }
                     }
 
                     if (checkIscorrect) {
-                        reindexAnswers();
                         var formdata = $(this).serialize();
                         $.ajax({
                             url: "{{ route('admin.ques-ans.editaddqa') }}",
@@ -272,15 +273,18 @@
                                 if (response.success == true) {
                                     location.reload();
                                 } else {
-                                    alert('Data Submit Failed');
+                                    alert(response.message || 'Data Submit Failed');
                                 }
+                            },
+                            error: function(err) {
+                                alert('Something went wrong!');
                             }
                         });
 
                     } else {
-                        $(".error").text("Please Select Anyone");
+                        $(".editError").text("Please Select Anyone Correct Answer");
                         setTimeout(() => {
-                            $(".error").text("");
+                            $(".editError").text("");
                         }, 2000);
                     }
                 }
@@ -363,16 +367,50 @@
 
             $('.editqaBtn').on('click', function() {
                 var qid = $(this).attr('data-id');
+                $('#qid').val(qid);
+                $('.editError').text('');
+                $('#editanswerContainer').html('');
+
                 $.ajax({
-                    'url': "{{ route('admin.ques-ans.getqaDetails') }}",
-                    'type': 'GET',
-                    'data': qid,
-                    'success': function(response) {
-                        if (response.data) {
-                            $('edit_question').val('response.questions');
+                    url: "{{ route('admin.ques-ans.getqaDetails') }}",
+                    type: 'GET',
+                    data: { qid: qid },
+                    success: function(response) {
+                        if (response.success && response.data) {
+                            var data = response.data;
+                            $('#edit_question').val(data.questions);
+
+                            let html = '';
+                            let answers = data.answers || [];
+                            for (let i = 0; i < answers.length; i++) {
+                                let isChecked = (answers[i].is_correct == 1) ? 'checked' : '';
+                                html += `
+                                <div class="row mt-2 align-items-center editasnwersrows">
+                                    <div class="col-9 d-flex align-items-center gap-2">
+                                        <input type="radio"
+                                               name="edit_correct_answer" class="edit_correct_answer"
+                                               value="${answers[i].id}" ${isChecked}>
+                                        <input type="text"
+                                               name="answers[${answers[i].id}]"
+                                               class="form-control"
+                                               value="${answers[i].answer}"
+                                               placeholder="Enter Answer"
+                                               autocomplete="off" required>
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="button" class="btn btn-danger btn-sm delete">Delete</button>
+                                    </div>
+                                </div>
+                                `;
+                            }
+                            $('#editanswerContainer').html(html);
                         } else {
-                            alert("Not Data Found")
+                            alert("Data Not Found");
                         }
+                    },
+                    error: function(err) {
+                        console.log(err);
+                        alert("Error fetching question details");
                     }
                 });
             });

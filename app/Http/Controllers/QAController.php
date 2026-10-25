@@ -67,10 +67,24 @@ class QAController extends Controller
      */
     public function show(Request $request)
     {
-        $qa = Questions::where('id',$request->qid)->with('answers')->get();
-        return response()->json([
-             'data' => $qa
-        ]);
+        try {
+            $qa = Questions::where('id', $request->qid)->with('answers')->first();
+            if (!$qa) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Question Not Found'
+                ]);
+            }
+            return response()->json([
+                'success' => true,
+                'data' => $qa
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 
     /**
@@ -86,7 +100,58 @@ class QAController extends Controller
      */
     public function update(Request $request)
     {
-        //
+        try {
+            $request->validate([
+                'qid' => 'required',
+                'edit_question' => 'required|string',
+            ]);
+
+            Questions::where('id', $request->qid)->update([
+                'questions' => $request->edit_question
+            ]);
+
+            $existingAnsIds = [];
+
+            if ($request->has('answers') && is_array($request->answers)) {
+                $existingAnsIds = array_keys($request->answers);
+                foreach ($request->answers as $ansId => $ansText) {
+                    $isCorrect = ($request->edit_correct_answer == $ansId || $request->edit_correct_answer === $ansText) ? 1 : 0;
+                    Answers::where('id', $ansId)
+                        ->where('question_id', $request->qid)
+                        ->update([
+                            'answer' => $ansText,
+                            'is_correct' => $isCorrect
+                        ]);
+                }
+            }
+
+            Answers::where('question_id', $request->qid)
+                ->whereNotIn('id', $existingAnsIds)
+                ->delete();
+
+            if ($request->has('new_answers') && is_array($request->new_answers)) {
+                foreach ($request->new_answers as $newAnsText) {
+                    if (!empty($newAnsText)) {
+                        $isCorrect = ($request->edit_correct_answer === $newAnsText) ? 1 : 0;
+                        Answers::create([
+                            'question_id' => $request->qid,
+                            'answer' => $newAnsText,
+                            'is_correct' => $isCorrect
+                        ]);
+                    }
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Question and Answers Updated Successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 
     /**
