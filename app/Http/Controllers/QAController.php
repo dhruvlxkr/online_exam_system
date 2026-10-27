@@ -157,8 +157,22 @@ class QAController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        //
+        try{
+            Questions::where('id',$request->id)->delete();
+            Answers::where('question_id',$request->id)->delete();
+        return response()->json([
+             'success'=>true,
+            'message' => 'Record Delete Successfully'
+        ]);
+
+        }catch(\Exception $e){
+            return response()->json([
+                'success'=>false,
+                'message' => $e->getMessage()
+            ]);
+        }
+       
     }
 }

@@ -49,6 +49,7 @@ Use App\Http\Controllers\QAController;
       Route::post('/addqa',[QAController::class,'store'])->name('ques-ans.addqa');
       Route::get('/getqaDetails',[QAController::class,'show'])->name('ques-ans.getqaDetails');
       Route::post('/editaddqa',[QAController::class,'update'])->name('ques-ans.editaddqa');
+      Route::post('/qadelete',[QAController::class,'destroy'])->name('ques-ans.qadelete');
     });
 
 

@@ -34,9 +34,8 @@
                                         <button type="button" class="btn btn-sm btn-warning editqaBtn"
                                             data-id="{{ $question->id }}" data-bs-toggle="modal"
                                             data-bs-target="#editq&aModal">Edit</button>
-                                        <button type="button" class="btn btn-sm btn-danger deleteq&aBtn" id="deleteq&aBtn"
-                                            data-id="{{ $question->id }}" data-bs-toggle="modal"
-                                            data-bs-target="#deleteq&aModal">Delete</button>
+                                        <button type="button" class="btn btn-sm btn-danger deleteqaBtn" id="deleteqaBtn"
+                                            data-id="{{ $question->id }}">Delete</button>
                                     </td>
 
                                 </tr>
@@ -256,7 +255,8 @@
                         if ($(".edit_correct_answer:eq(" + i + ")").is(':checked') == true) {
                             checkIscorrect = true;
                             let currentVal = $(".edit_correct_answer:eq(" + i + ")").val();
-                            let textVal = $(".edit_correct_answer:eq(" + i + ")").closest('.editasnwersrows').find('input[type="text"]').val();
+                            let textVal = $(".edit_correct_answer:eq(" + i + ")").closest(
+                                '.editasnwersrows').find('input[type="text"]').val();
                             if (!currentVal) {
                                 $(".edit_correct_answer:eq(" + i + ")").val(textVal);
                             }
@@ -374,7 +374,9 @@
                 $.ajax({
                     url: "{{ route('admin.ques-ans.getqaDetails') }}",
                     type: 'GET',
-                    data: { qid: qid },
+                    data: {
+                        qid: qid
+                    },
                     success: function(response) {
                         if (response.success && response.data) {
                             var data = response.data;
@@ -411,6 +413,26 @@
                     error: function(err) {
                         console.log(err);
                         alert("Error fetching question details");
+                    }
+                });
+            });
+
+            $('.deleteqaBtn').on('click', function() {
+                var qid = $(this).attr('data-id');
+
+                $.ajax({
+                    url: "{{ route('admin.ques-ans.qadelete') }}",
+                    type: "POST",
+                    data: {
+                        id: qid
+                    },
+                    success: function(response) {
+                        if (response.success == true) {
+                            alert(response.message)
+                            location.reload();
+                        } else {
+                            alert(response.message)
+                        }
                     }
                 });
             });
