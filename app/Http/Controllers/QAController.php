@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Questions;
 use App\Models\Answers;
+use App\Imports\QnaImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class QAController extends Controller
 {
@@ -174,5 +176,24 @@ class QAController extends Controller
             ]);
         }
        
+    }
+
+    public function importCSV(Request $request){
+       try{
+         
+       Excel::Import(new QnaImport,$request->file('file'));
+
+       return response()->json([
+        'success' => true,
+        'message' => "CSV File Import Successfully"
+       ]);
+
+
+       }catch(\Exception $e){
+        return response()->json([
+            'success' => false,
+            'message' => $e->getMessage()
+        ]);
+       }
     }
 }

@@ -50,6 +50,7 @@ Use App\Http\Controllers\QAController;
       Route::get('/getqaDetails',[QAController::class,'show'])->name('ques-ans.getqaDetails');
       Route::post('/editaddqa',[QAController::class,'update'])->name('ques-ans.editaddqa');
       Route::post('/qadelete',[QAController::class,'destroy'])->name('ques-ans.qadelete');
+      Route::post('/importcsv',[QAController::class,'destroy'])->name('ques-ans.importcsv');
     });
 
 

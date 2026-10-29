@@ -175,7 +175,7 @@
 
 
     <div class="modal fade" id="ImportQAModal" tabindex="-1" aria-hidden="true">
-        <form id="editQAForm">
+        <form id="importCSVqa" enctype="multipart/form-data">
             @csrf
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -187,7 +187,7 @@
                         <div class="row">
                             <div class="col-12 d-flex">
                                 <input type="file" name="Import_file" id="Import_file" class="form-control m-3"
-                                    required>
+                                    required accept=".csv">
 
                                 <button type="button" class="btn btn-primary btn-sm" id="editansrow">
                                     Import
@@ -469,6 +469,26 @@
                     }
                 });
             });
+
+            $(".importCSVqa").on("submit", function(e) {
+                e.preventDefault();
+
+                new FormData = new FormData();
+                FormData.append('file', Import_file.file[0]);
+
+                $.ajaxSetup({
+                    headers: {
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    }
+                });
+
+                $.ajax({
+                    url: "{{ route('admin.ques-ans.importcsv') }}",
+                    type: "POST",
+                    data: FormData
+                })
+
+            })
 
         });
     </script>
