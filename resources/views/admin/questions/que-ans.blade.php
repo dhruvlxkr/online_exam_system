@@ -176,7 +176,6 @@
 
     <div class="modal fade" id="ImportQAModal" tabindex="-1" aria-hidden="true">
         <form id="importCSVqa" enctype="multipart/form-data">
-            @csrf
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -189,7 +188,7 @@
                                 <input type="file" name="Import_file" id="Import_file" class="form-control m-3"
                                     required accept=".csv">
 
-                                <button type="button" class="btn btn-primary btn-sm" id="editansrow">
+                                <button type="submit" class="btn btn-primary btn-sm" id="importbtn  ">
                                     Import
                                 </button>
                             </div>
@@ -470,11 +469,11 @@
                 });
             });
 
-            $(".importCSVqa").on("submit", function(e) {
+            $("#importCSVqa").on("submit", function(e) {
                 e.preventDefault();
 
                 new FormData = new FormData();
-                FormData.append('file', Import_file.file[0]);
+                FormData.append('file', Import_file.files[0]);
 
                 $.ajaxSetup({
                     headers: {
@@ -485,10 +484,19 @@
                 $.ajax({
                     url: "{{ route('admin.ques-ans.importcsv') }}",
                     type: "POST",
-                    data: FormData
-                })
+                    data: FormData,
+                    proccessData: false,
+                    contentType: false,
+                    success: function(response) {
+                        if (response.success == true) {
+                            console.log(response);
+                        } else {
+                            alert(response.massage);
+                        }
+                    }
+                });
 
-            })
+            });
 
         });
     </script>
